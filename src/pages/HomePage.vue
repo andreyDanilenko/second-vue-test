@@ -5,18 +5,24 @@
       .card-list 
         h2.card-list__title All
         .card-list__wrapper
-          card-item(v-for="post in POSTS", :post="post", :key="post.id")
+          card-item(
+            v-for="post in POSTS",
+            :post="post",
+            :title="(title = '[add to favorites]')",
+            :key="post.id"
+          )
       .card-list 
         h2.card-list__title Favorite
         .card-list__wrapper
-          card-item(v-for="post in POSTS", :post="post", :key="post.id")
+          card-item(:title="(title = '[remove]')")
 </template>
 <script>
 import CardItem from "../components/CardItem.vue";
+import MyButton from "../components/UI/MyButton.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  components: { CardItem },
+  components: { CardItem, MyButton },
 
   computed: {
     ...mapGetters(["POSTS"]),
