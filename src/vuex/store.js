@@ -13,6 +13,14 @@ const store = new Vuex.Store({
     mutations: {
         SET_POSTS_FROM_API: (state, posts) => {
             state.posts = posts
+        },
+        SET_FAVORITES: (state, post) => {
+            state.favorites.unshift(post)
+            state.posts = state.posts.filter(p => p.id !== post.id)
+        },
+        DELETE_FROM_FAVORITES: (state, post) => {
+            state.posts.unshift(post)
+            state.favorites = state.favorites.filter(p => p.id !== post.id)
         }
     },
     actions: {
@@ -26,14 +34,20 @@ const store = new Vuex.Store({
                 alert('Нет данных')
                 return error;
             })
+        },
+        ADD_TO_FAVORITES({ commit }, post) {
+            commit('SET_FAVORITES', post)
+        },
+        REMOVE_FROM_FAVORITES({ commit }, post) {
+            commit('DELETE_FROM_FAVORITES', post)
         }
     },
     getters: {
         POSTS(state) {
-            return state.posts;
+            return state.posts.slice().sort((a, b) => (b.id > a.id) ? 1 : -1);
         },
         FAVORITES(state) {
-            return state.favorites;
+            return state.favorites.slice().sort((a, b) => (b.id > a.id) ? 1 : -1);
         }
     }
 

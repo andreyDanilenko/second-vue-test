@@ -9,20 +9,20 @@
           card-item(
             v-else,
             v-for="post in POSTS",
+            :key="post.id",
             :post="post",
             :buttonTitle="(buttonTitle = '[addToFavorites]')",
-            :key="post.id",
             @click="addToFavorites"
           )
       .card-list
         h2.card-list__title Favorite
         .card-list__wrapper
-          .card-list__empty(v-if="!FAVORITES.length") Нет фаоворитов
+          .card-list__empty(v-if="!FAVORITES.length") Нет фаворитов...
           card-item(
             v-else,
-            v-for="favorite in FAVORITES",
-            :post="post",
+            v-for="post in FAVORITES",
             :key="post.id",
+            :post="post",
             :buttonTitle="(buttonTitle = '[remove]')",
             @click="removeFromFavorites"
           )
@@ -40,12 +40,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(["GET_POSTS_FROM_API"]),
+    ...mapActions([
+      "GET_POSTS_FROM_API",
+      "ADD_TO_FAVORITES",
+      "REMOVE_FROM_FAVORITES",
+    ]),
     addToFavorites(post) {
-      console.log("add", post.id);
+      this.ADD_TO_FAVORITES(post);
     },
     removeFromFavorites(post) {
-      console.log("remove", post.id);
+      this.REMOVE_FROM_FAVORITES(post);
     },
   },
 
@@ -73,6 +77,21 @@ export default {
     width: calc((100% / 2) - 20px);
   }
 
+  &__empty {
+    user-select: none;
+    display: block;
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 35px;
+    border-radius: 5px;
+    background: #f4f6f9;
+    color: #4682b4;
+    border: 1px solid #4682b4;
+  }
+
   &__title {
     user-select: none;
     display: inline-block;
@@ -93,7 +112,7 @@ export default {
     color: #4682b4;
     border: 1px solid #4682b4;
     border-radius: 5px;
-    padding: 0 20px 40px;
+    padding: 0 20px 20px;
     margin: 10px 0;
   }
 }
