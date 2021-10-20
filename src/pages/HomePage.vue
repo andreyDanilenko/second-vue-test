@@ -5,16 +5,27 @@
       .card-list 
         h2.card-list__title All
         .card-list__wrapper
+          .card-list__empty(v-if="!POSTS.length") Нет ничего
           card-item(
+            v-else,
             v-for="post in POSTS",
             :post="post",
-            :title="(title = '[add to favorites]')",
-            :key="post.id"
+            :buttonTitle="(buttonTitle = '[addToFavorites]')",
+            :key="post.id",
+            @click="addToFavorites"
           )
-      .card-list 
+      .card-list
         h2.card-list__title Favorite
         .card-list__wrapper
-          card-item(:title="(title = '[remove]')")
+          .card-list__empty(v-if="!FAVORITES.length") Нет фаоворитов
+          card-item(
+            v-else,
+            v-for="favorite in FAVORITES",
+            :post="post",
+            :key="post.id",
+            :buttonTitle="(buttonTitle = '[remove]')",
+            @click="removeFromFavorites"
+          )
 </template>
 <script>
 import CardItem from "../components/CardItem.vue";
@@ -25,11 +36,17 @@ export default {
   components: { CardItem, MyButton },
 
   computed: {
-    ...mapGetters(["POSTS"]),
+    ...mapGetters(["POSTS", "FAVORITES"]),
   },
 
   methods: {
     ...mapActions(["GET_POSTS_FROM_API"]),
+    addToFavorites(post) {
+      console.log("add", post.id);
+    },
+    removeFromFavorites(post) {
+      console.log("remove", post.id);
+    },
   },
 
   mounted() {
@@ -58,25 +75,25 @@ export default {
 
   &__title {
     user-select: none;
-    background: white;
     display: inline-block;
     padding: 10px;
     text-align: center;
     font-size: 30px;
     font-weight: 500;
     line-height: 35px;
-    color: #4682b4;
     border-radius: 5px;
-    border: 1px solid #4682b4;
     margin: 10px 0;
+    background: #f4f6f9;
+    color: #4682b4;
+    border: 1px solid #4682b4;
   }
 
   &__wrapper {
-    background: white;
+    background: #f4f6f9;
     color: #4682b4;
     border: 1px solid #4682b4;
     border-radius: 5px;
-    padding: 20px;
+    padding: 0 20px 40px;
     margin: 10px 0;
   }
 }

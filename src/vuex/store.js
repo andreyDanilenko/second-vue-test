@@ -7,7 +7,8 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        posts: []
+        posts: [],
+        favorites: []
     },
     mutations: {
         SET_POSTS_FROM_API: (state, posts) => {
@@ -29,7 +30,10 @@ const store = new Vuex.Store({
     },
     getters: {
         POSTS(state) {
-            return state.posts
+            return state.posts;
+        },
+        FAVORITES(state) {
+            return state.favorites;
         }
     }
 
