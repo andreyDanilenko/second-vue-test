@@ -1,31 +1,57 @@
 <template lang="pug">
 .history
-  .container
+  .container 
     .history__wrapper
-      .history__filter
-        my-button(:class="'history__button'") History
-        my-button(:class="'history__button'") Add history
-        my-button(:class="'history__button'") Deletion history
+      .history__filter(@click="setFilter")
+        my-button(:class="'history__button'", :value="'all'") History
+        my-button(:class="'history__button'", :value="'add'") Add history
+        my-button(:class="'history__button'", :value="'remove'") Deletion history
+
       .history__list 
-        .history__item(
-          v-for="story in HISTORY",
-          :class="`history__item--${story.type}`",
-          :key="story.id"
-        ) 
-          h2.history__item-title {{ story.name }}
-          p.history__item-type {{ story.type }}
-          p.history__item-date {{ story.date }}
+        history-item(v-for="story in history", :story="story", :key="story.id")
 </template>
 <script>
-import CardItem from "../components/CardItem.vue";
+import HistoryItem from "../components/HistoryItem.vue";
 import MyButton from "../components/UI/MyButton.vue";
 import { mapGetters } from "vuex";
 
 export default {
-  components: { MyButton, CardItem },
+  components: { MyButton, HistoryItem },
+
+  data() {
+    return { history: [] };
+  },
 
   computed: {
     ...mapGetters(["HISTORY"]),
+  },
+
+  methods: {
+    setFilter(evt) {
+      if (evt.target.tagName !== "BUTTON") {
+        return;
+      }
+      switch (evt.target.value) {
+        case "add":
+          return (this.history = this.HISTORY.filter(
+            (story) => story.type === evt.target.value
+          ));
+        case "remove":
+          return (this.history = this.HISTORY.filter(
+            (story) => story.type === evt.target.value
+          ));
+      }
+
+      return (this.history = this.HISTORY);
+    },
+
+    setHistory() {
+      this.history = this.HISTORY;
+    },
+  },
+
+  mounted() {
+    this.setHistory();
   },
 };
 </script>
@@ -35,36 +61,6 @@ export default {
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
-  }
-
-  &__item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    color: #4682b4;
-    border: 1px #4682b4 solid;
-    padding: 20px;
-    border-radius: 5px;
-
-    &--add {
-      background: #f4f6f9;
-      color: #4682b4;
-      border: 1px solid #4682b4;
-    }
-
-    &--remove {
-      background: #4682b4;
-      color: #f4f6f9;
-      border: 1px #4682b4 solid;
-    }
-  }
-
-  &__item-title {
-    flex-grow: 1;
-  }
-  &__item-type {
-    margin: 0 20px;
   }
 
   &__button {

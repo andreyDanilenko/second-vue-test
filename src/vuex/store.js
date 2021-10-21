@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from 'vuex';
 import axios from 'axios';
-const URL = 'https://jsonplaceholder.typicode.com/posts'
+const URL = 'https://jsonplaceholder.typicode.com/photos'
 
 Vue.use(Vuex)
 
@@ -9,7 +9,7 @@ const store = new Vuex.Store({
     state: {
         posts: [],
         favorites: [],
-        history: []
+        history: [],
     },
     mutations: {
         SET_POSTS_FROM_API: (state, posts) => {
@@ -28,6 +28,7 @@ const store = new Vuex.Store({
             state.posts.unshift(post)
             state.favorites = state.favorites.filter(p => p.id !== post.id)
         },
+
         SET_HISTORY: (state, story) => {
             state.history.unshift(story)
         }

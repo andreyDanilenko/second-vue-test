@@ -5,10 +5,10 @@
       .card-list 
         h2.card-list__title All
         .card-list__wrapper
-          .card-list__empty(v-if="!POSTS.length") Нет ничего...
+          .card-list__empty(v-if="!POSTS.length") There is nothing...
           transition-group(name="card-list")
             card-item(
-              v-for="post in POSTS",
+              v-for="post in [...POSTS].slice(0, 10)",
               :key="post.id",
               :post="post",
               :className="(className = 'card')",
@@ -18,10 +18,10 @@
       .card-list
         h2.card-list__title Favorites
         .card-list__wrapper
-          .card-list__empty(v-if="!FAVORITES.length") Нет фаворитов...
+          .card-list__empty(v-if="!FAVORITES.length") No favorites...
           transition-group(name="card-list")
             card-item(
-              v-for="post in FAVORITES",
+              v-for="post in [...FAVORITES].slice(0, 10)",
               :key="post.id",
               :post="post",
               :className="(className = 'card')",
@@ -37,6 +37,10 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   components: { CardItem, MyButton },
 
+  data() {
+    return { history: [] };
+  },
+
   computed: {
     ...mapGetters(["POSTS", "FAVORITES"]),
   },
@@ -48,6 +52,8 @@ export default {
       "REMOVE_FROM_FAVORITES",
       "ADD_TO_HISTORY",
     ]),
+
+    filterPosts() {},
 
     addToFavorites(post) {
       this.ADD_TO_FAVORITES(post);
@@ -99,7 +105,7 @@ export default {
     transform: scale(0);
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
