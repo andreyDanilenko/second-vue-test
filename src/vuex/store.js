@@ -27,6 +27,9 @@ const store = new Vuex.Store({
         DELETE_FROM_FAVORITES: (state, post) => {
             state.posts.unshift(post)
             state.favorites = state.favorites.filter(p => p.id !== post.id)
+        },
+        SET_HISTORY: (state, story) => {
+            state.history.unshift(story)
         }
     },
     actions: {
@@ -48,18 +51,24 @@ const store = new Vuex.Store({
 
         REMOVE_FROM_FAVORITES({ commit }, post) {
             commit('DELETE_FROM_FAVORITES', post)
+        },
+
+        ADD_TO_HISTORY({ commit }, story) {
+            commit('SET_HISTORY', story)
         }
     },
+
     getters: {
         POSTS(state) {
             return state.posts.slice().sort((a, b) => (b.id > a.id) ? 1 : -1);
         },
         FAVORITES(state) {
             return state.favorites.slice().sort((a, b) => (b.id > a.id) ? 1 : -1);
+        },
+        HISTORY(state) {
+            return state.history
         }
     }
-
-
 })
 
 export default store;

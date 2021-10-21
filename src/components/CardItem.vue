@@ -1,6 +1,6 @@
 <template lang="pug">
 .card-item(@click="click")
-  h3.card__title {{ post.body }}
+  h3.card__title {{ post.title }}
   my-button(
     :class="className !== undefined ? `button--${className}` : ''",
     v-if="buttonTitle !== ''"

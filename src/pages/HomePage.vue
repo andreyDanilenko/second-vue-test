@@ -46,12 +46,26 @@ export default {
       "GET_POSTS_FROM_API",
       "ADD_TO_FAVORITES",
       "REMOVE_FROM_FAVORITES",
+      "ADD_TO_HISTORY",
     ]),
+
     addToFavorites(post) {
       this.ADD_TO_FAVORITES(post);
+      this.ADD_TO_HISTORY({
+        date: new Date(),
+        type: "add",
+        id: Math.random(),
+        name: post.title,
+      });
     },
     removeFromFavorites(post) {
       this.REMOVE_FROM_FAVORITES(post);
+      this.ADD_TO_HISTORY({
+        date: new Date(),
+        type: "remove",
+        id: Math.random(),
+        name: post.title,
+      });
     },
   },
 
