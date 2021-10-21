@@ -2,43 +2,60 @@
 .home 
   .container
     .home__wrapper
-      .card-list 
+      .card-list
         h2.card-list__title All
         .card-list__wrapper
+          input.input(v-model="value")
           .card-list__empty(v-if="!POSTS.length") There is nothing...
           transition-group(name="card-list")
             card-item(
-              v-for="post in [...POSTS].slice(0, 10)",
+              v-for="post in POSTS.slice(0, renderedPosts)",
               :key="post.id",
               :post="post",
               :className="(className = 'card')",
               :buttonTitle="(buttonTitle = '[addToFavorites]')",
               @click="addToFavorites"
             )
+        my-button(v-if="POSTS.length - renderedPosts <= 0") 
+        my-button(@click.native="moreAll", :class="'card-list__button'") Показать еще {{ POSTS.length - renderedPosts }}
+
       .card-list
         h2.card-list__title Favorites
         .card-list__wrapper
           .card-list__empty(v-if="!FAVORITES.length") No favorites...
           transition-group(name="card-list")
             card-item(
-              v-for="post in [...FAVORITES].slice(0, 10)",
+              v-for="post in FAVORITES.slice(0, renderedFavorites)",
               :key="post.id",
               :post="post",
               :className="(className = 'card')",
               :buttonTitle="(buttonTitle = '[remove]')",
               @click="removeFromFavorites"
             )
+        my-button(v-if="FAVORITES.length - renderedFavorites <= 0") 
+        my-button(
+          v-else,
+          @click.native="moreFavorites",
+          :class="'card-list__button'"
+        ) Показать еще {{ FAVORITES.length - renderedFavorites }}
 </template>
 <script>
 import CardItem from "../components/CardItem.vue";
 import MyButton from "../components/UI/MyButton.vue";
+import MyInput from "../components/UI/MyInput.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  components: { CardItem, MyButton },
+  components: { CardItem, MyButton, MyInput },
 
   data() {
-    return { history: [] };
+    return {
+      posts: [],
+      favorites: [],
+      value: "",
+      renderedPosts: 10,
+      renderedFavorites: 10,
+    };
   },
 
   computed: {
@@ -54,6 +71,14 @@ export default {
     ]),
 
     filterPosts() {},
+
+    moreAll() {
+      this.renderedPosts += 10;
+    },
+
+    moreFavorites() {
+      this.renderedFavorites += 10;
+    },
 
     addToFavorites(post) {
       this.ADD_TO_FAVORITES(post);
@@ -80,7 +105,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .home {
   &__wrapper {
     display: flex;
@@ -116,10 +141,6 @@ export default {
   font-family: Arial, sans-serif;
   margin: 10px;
   width: 100%;
-
-  // @media (min-width: 900px) {
-  //   width: calc((100% / 2) - 20px);
-  // }
 
   &__empty {
     user-select: none;
@@ -158,6 +179,32 @@ export default {
     border-radius: 5px;
     padding: 0 20px 20px;
     margin: 10px 0;
+  }
+
+  &__button {
+    width: 100%;
+    background: #f4f6f9;
+    color: #4682b4;
+    border: 1px solid #4682b4;
+
+    &:hover {
+      background: #4682b4;
+      color: #f4f6f9;
+      border: 1px solid #4682b4;
+    }
+  }
+
+  .input {
+    width: 100%;
+    padding: 10px 15px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+    margin-top: 15px;
+    color: #4682b4;
+    border: 1px #4682b4 solid;
+    background: #f4f6f9;
+    border-radius: 5px;
   }
 }
 </style>

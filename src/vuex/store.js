@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from 'vuex';
 import axios from 'axios';
-const URL = 'https://jsonplaceholder.typicode.com/photos'
 
 Vue.use(Vuex)
 
@@ -35,7 +34,7 @@ const store = new Vuex.Store({
     },
     actions: {
         GET_POSTS_FROM_API({ commit }) {
-            return axios(URL, {
+            return axios('https://jsonplaceholder.typicode.com/photos', {
                 method: "GET"
             }).then((posts) => {
                 commit('SET_POSTS_FROM_API', posts.data)

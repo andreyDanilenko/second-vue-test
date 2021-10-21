@@ -6,7 +6,6 @@
         my-button(:class="'history__button'", :value="'all'") History
         my-button(:class="'history__button'", :value="'add'") Add history
         my-button(:class="'history__button'", :value="'remove'") Deletion history
-
       .history__list 
         history-item(v-for="story in history", :story="story", :key="story.id")
 </template>
@@ -33,11 +32,11 @@ export default {
       }
       switch (evt.target.value) {
         case "add":
-          return (this.history = this.HISTORY.filter(
+          return (this.history = [...this.HISTORY].filter(
             (story) => story.type === evt.target.value
           ));
         case "remove":
-          return (this.history = this.HISTORY.filter(
+          return (this.history = [...this.HISTORY].filter(
             (story) => story.type === evt.target.value
           ));
       }
