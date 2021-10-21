@@ -5,27 +5,29 @@
       .card-list 
         h2.card-list__title All
         .card-list__wrapper
-          .card-list__empty(v-if="!POSTS.length") Нет ничего
-          card-item(
-            v-else,
-            v-for="post in POSTS",
-            :key="post.id",
-            :post="post",
-            :buttonTitle="(buttonTitle = '[addToFavorites]')",
-            @click="addToFavorites"
-          )
+          .card-list__empty(v-if="!POSTS.length") Нет ничего...
+          transition-group(name="card-list")
+            card-item(
+              v-for="post in POSTS",
+              :key="post.id",
+              :post="post",
+              :className="(className = 'card')",
+              :buttonTitle="(buttonTitle = '[addToFavorites]')",
+              @click="addToFavorites"
+            )
       .card-list
-        h2.card-list__title Favorite
+        h2.card-list__title Favorites
         .card-list__wrapper
           .card-list__empty(v-if="!FAVORITES.length") Нет фаворитов...
-          card-item(
-            v-else,
-            v-for="post in FAVORITES",
-            :key="post.id",
-            :post="post",
-            :buttonTitle="(buttonTitle = '[remove]')",
-            @click="removeFromFavorites"
-          )
+          transition-group(name="card-list")
+            card-item(
+              v-for="post in FAVORITES",
+              :key="post.id",
+              :post="post",
+              :className="(className = 'card')",
+              :buttonTitle="(buttonTitle = '[remove]')",
+              @click="removeFromFavorites"
+            )
 </template>
 <script>
 import CardItem from "../components/CardItem.vue";
@@ -65,6 +67,28 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     margin: 0 -10px;
+
+    @media (min-width: 900px) {
+      flex-wrap: nowrap;
+    }
+  }
+}
+
+.card-list-enter-active {
+  animation: bounce-in 1s;
+}
+.card-list-leave-active {
+  animation: bounce-in 0.8s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -73,9 +97,9 @@ export default {
   margin: 10px;
   width: 100%;
 
-  @media (min-width: 900px) {
-    width: calc((100% / 2) - 20px);
-  }
+  // @media (min-width: 900px) {
+  //   width: calc((100% / 2) - 20px);
+  // }
 
   &__empty {
     user-select: none;

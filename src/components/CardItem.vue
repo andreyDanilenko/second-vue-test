@@ -1,7 +1,10 @@
 <template lang="pug">
 .card-item(@click="click")
-  h3.card__title {{ post.title }}
-  my-button(v-if="buttonTitle !== ''") {{ buttonTitle }}
+  h3.card__title {{ post.body }}
+  my-button(
+    :class="className !== undefined ? `button--${className}` : ''",
+    v-if="buttonTitle !== ''"
+  ) {{ buttonTitle }}
 </template>
 <script>
 import MyButton from "./UI/MyButton.vue";
@@ -18,6 +21,10 @@ export default {
     buttonTitle: {
       type: String,
       required: true,
+    },
+
+    className: {
+      type: String,
     },
   },
 

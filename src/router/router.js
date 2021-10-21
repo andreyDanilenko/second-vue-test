@@ -5,11 +5,11 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        component: () => import('./pages/HomePage.vue')
+        component: () => import('../pages/HomePage.vue')
     },
     {
         path: '/history',
-        component: () => import('./pages/HistoryPage.vue')
+        component: () => import('../pages/HistoryPage.vue')
     }
 ];
 

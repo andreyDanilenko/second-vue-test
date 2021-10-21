@@ -27,6 +27,19 @@ export default {};
     background: #f4f6f9;
   }
 
+  &--card {
+    background: #f4f6f9;
+    color: #4682b4;
+    border: 1px solid #4682b4;
+
+    &:hover {
+      transition: 0.8s;
+      color: #f4f6f9;
+      border: 1px #4682b4 solid;
+      background: #4682b4;
+    }
+  }
+
   &:not(:hover) {
     transition: 0.8s;
   }

@@ -8,16 +8,22 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         posts: [],
-        favorites: []
+        favorites: [],
+        history: []
     },
     mutations: {
         SET_POSTS_FROM_API: (state, posts) => {
+            if (state.posts.length) {
+                return;
+            }
             state.posts = posts
         },
+
         SET_FAVORITES: (state, post) => {
             state.favorites.unshift(post)
             state.posts = state.posts.filter(p => p.id !== post.id)
         },
+
         DELETE_FROM_FAVORITES: (state, post) => {
             state.posts.unshift(post)
             state.favorites = state.favorites.filter(p => p.id !== post.id)
@@ -35,9 +41,11 @@ const store = new Vuex.Store({
                 return error;
             })
         },
+
         ADD_TO_FAVORITES({ commit }, post) {
             commit('SET_FAVORITES', post)
         },
+
         REMOVE_FROM_FAVORITES({ commit }, post) {
             commit('DELETE_FROM_FAVORITES', post)
         }
