@@ -62,6 +62,10 @@ export default {
     flex-wrap: wrap;
   }
 
+  &__wrapper {
+    padding-bottom: 20px;
+  }
+
   &__button {
     background: #f4f6f9;
     color: #4682b4;

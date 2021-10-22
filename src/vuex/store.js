@@ -10,6 +10,7 @@ const store = new Vuex.Store({
         favorites: [],
         history: [],
     },
+
     mutations: {
         SET_POSTS_FROM_API: (state, posts) => {
             if (state.posts.length) {
@@ -30,8 +31,9 @@ const store = new Vuex.Store({
 
         SET_HISTORY: (state, story) => {
             state.history.unshift(story)
-        }
+        },
     },
+
     actions: {
         GET_POSTS_FROM_API({ commit }) {
             return axios('https://jsonplaceholder.typicode.com/photos', {
@@ -55,16 +57,18 @@ const store = new Vuex.Store({
 
         ADD_TO_HISTORY({ commit }, story) {
             commit('SET_HISTORY', story)
-        }
+        },
     },
 
     getters: {
         POSTS(state) {
             return state.posts.slice().sort((a, b) => (b.id > a.id) ? 1 : -1);
         },
+
         FAVORITES(state) {
             return state.favorites.slice().sort((a, b) => (b.id > a.id) ? 1 : -1);
         },
+
         HISTORY(state) {
             return state.history
         }

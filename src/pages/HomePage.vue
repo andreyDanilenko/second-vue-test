@@ -5,19 +5,23 @@
       .card-list
         h2.card-list__title All
         .card-list__wrapper
-          input.input(v-model="value")
-          .card-list__empty(v-if="!POSTS.length") There is nothing...
+          input.input(v-model="value", @input="filterPosts")
+          .card-list__empty(v-if="!getPosts.length") There is nothing...
           transition-group(name="card-list")
             card-item(
-              v-for="post in POSTS.slice(0, renderedPosts)",
+              v-for="post in getPosts.slice(0, renderedPosts)",
               :key="post.id",
               :post="post",
               :className="(className = 'card')",
               :buttonTitle="(buttonTitle = '[addToFavorites]')",
               @click="addToFavorites"
             )
-        my-button(v-if="POSTS.length - renderedPosts <= 0") 
-        my-button(@click.native="moreAll", :class="'card-list__button'") Показать еще {{ POSTS.length - renderedPosts }}
+        my-button(v-if="getPosts.length <= renderedPosts") 
+        my-button(
+          v-else,
+          @click.native="moreAll",
+          :class="'card-list__button'"
+        ) Показать еще {{ getPosts.length - renderedPosts }}
 
       .card-list
         h2.card-list__title Favorites
@@ -32,7 +36,7 @@
               :buttonTitle="(buttonTitle = '[remove]')",
               @click="removeFromFavorites"
             )
-        my-button(v-if="FAVORITES.length - renderedFavorites <= 0") 
+        my-button(v-if="FAVORITES.length <= renderedFavorites") 
         my-button(
           v-else,
           @click.native="moreFavorites",
@@ -60,6 +64,22 @@ export default {
 
   computed: {
     ...mapGetters(["POSTS", "FAVORITES"]),
+
+    getPosts() {
+      if (this.posts.length) {
+        return this.posts;
+      } else {
+        return this.POSTS;
+      }
+    },
+
+    getFvorites() {
+      if (this.favorites.length) {
+        return this.favorites;
+      } else {
+        return this.FAVORITES;
+      }
+    },
   },
 
   methods: {
@@ -70,7 +90,12 @@ export default {
       "ADD_TO_HISTORY",
     ]),
 
-    filterPosts() {},
+    filterPosts(evt) {
+      console.log(evt);
+      return (this.posts = this.POSTS.filter((item) => {
+        return item.title.indexOf(this.value) > -1;
+      }));
+    },
 
     moreAll() {
       this.renderedPosts += 10;
@@ -81,6 +106,8 @@ export default {
     },
 
     addToFavorites(post) {
+      this.posts = 0;
+      this.value = "";
       this.ADD_TO_FAVORITES(post);
       this.ADD_TO_HISTORY({
         date: new Date(),
