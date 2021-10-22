@@ -90,8 +90,7 @@ export default {
       "ADD_TO_HISTORY",
     ]),
 
-    filterPosts(evt) {
-      console.log(evt);
+    filterPosts() {
       return (this.posts = this.POSTS.filter((item) => {
         return item.title.indexOf(this.value) > -1;
       }));
