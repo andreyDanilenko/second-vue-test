@@ -13,6 +13,7 @@ const store = new Vuex.Store({
         posts: [],
         favorites: [],
         history: [],
+        searchQuery: '',
     },
     actions,
     mutations,

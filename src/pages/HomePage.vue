@@ -5,29 +5,29 @@
       .card-list
         h2.card-list__title All
         .card-list__wrapper
-          input.input(v-model="value", @input="filterPosts")
-          .card-list__empty(v-if="!getPosts.length") There is nothing...
-          transition-group(name="card-list")
+          input.input(@input="filterPosts")
+          .card-list__empty(v-if="!SEARCHED_QUERY.length") There is nothing...
+          transition-group(name="card-list", mode="out-in")
             card-item(
-              v-for="post in getPosts.slice(0, renderedPosts)",
+              v-for="post in SEARCHED_QUERY.slice(0, renderedPosts)",
               :key="post.id",
               :post="post",
               :className="(className = 'card')",
               :buttonTitle="(buttonTitle = '[addToFavorites]')",
               @click="addToFavorites"
             )
-        my-button(v-if="getPosts.length <= renderedPosts") 
+        my-button(v-if="SEARCHED_QUERY.length <= renderedPosts") 
         my-button(
           v-else,
           @click.native="moreAll",
           :class="'card-list__button'"
-        ) Показать еще {{ getPosts.length - renderedPosts }}
+        ) Показать еще {{ SEARCHED_QUERY.length - renderedPosts }}
 
       .card-list
         h2.card-list__title Favorites
         .card-list__wrapper
           .card-list__empty(v-if="!FAVORITES.length") No favorites...
-          transition-group(name="card-list")
+          transition-group(name="card-list", mode="out-in")
             card-item(
               v-for="post in FAVORITES.slice(0, renderedFavorites)",
               :key="post.id",
@@ -47,39 +47,20 @@
 import CardItem from "../components/CardItem.vue";
 import MyButton from "../components/UI/MyButton.vue";
 import MyInput from "../components/UI/MyInput.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   components: { CardItem, MyButton, MyInput },
 
   data() {
     return {
-      posts: [],
-      favorites: [],
-      value: "",
       renderedPosts: 10,
       renderedFavorites: 10,
     };
   },
 
   computed: {
-    ...mapGetters(["POSTS", "FAVORITES"]),
-
-    getPosts() {
-      if (this.posts.length) {
-        return this.posts;
-      } else {
-        return this.POSTS;
-      }
-    },
-
-    getFvorites() {
-      if (this.favorites.length) {
-        return this.favorites;
-      } else {
-        return this.FAVORITES;
-      }
-    },
+    ...mapGetters(["SEARCHED_QUERY", "FAVORITES"]),
   },
 
   methods: {
@@ -90,11 +71,7 @@ export default {
       "ADD_TO_HISTORY",
     ]),
 
-    filterPosts() {
-      return (this.posts = this.POSTS.filter((item) => {
-        return item.title.indexOf(this.value) > -1;
-      }));
-    },
+    ...mapMutations(["SET_SEARCH_VALUE"]),
 
     moreAll() {
       this.renderedPosts += 10;
@@ -104,9 +81,11 @@ export default {
       this.renderedFavorites += 10;
     },
 
+    filterPosts(evt) {
+      this.SET_SEARCH_VALUE(evt.target.value);
+    },
+
     addToFavorites(post) {
-      this.posts = 0;
-      this.value = "";
       this.ADD_TO_FAVORITES(post);
       this.ADD_TO_HISTORY({
         date: new Date(),
@@ -145,22 +124,14 @@ export default {
   }
 }
 
-.card-list-enter-active {
-  animation: bounce-in 1s;
-}
+.card-list-enter-active,
 .card-list-leave-active {
-  animation: bounce-in 0.8s reverse;
+  transition: opacity 0.5s ease;
 }
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+
+.card-list-enter,
+.card-list-leave-to {
+  opacity: 0;
 }
 
 .card-list {
